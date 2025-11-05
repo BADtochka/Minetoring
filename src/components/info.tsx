@@ -1,4 +1,5 @@
 import { CONFIG } from '@/config/config';
+import { infoStore } from '@/stores/info';
 import type { OfflineServer, OnlineServer } from '@/types/MCSRVStat';
 import { createEffect, createSignal, onCleanup, Show, type Component } from 'solid-js';
 import { Motion } from 'solid-motionone';
@@ -16,11 +17,16 @@ export const Info: Component<InfoProps> = (props) => {
   const [copied, setCopied] = createSignal(false);
   const [animationEnded, setAnimationEnded] = createSignal(false);
   const data = () => props.data as OnlineServer;
+  const [storeData, setData] = infoStore;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(CONFIG.overrides?.ip ?? data().hostname);
     setCopied(true);
   };
+
+  createEffect(() => {
+    document.head.querySelector('link[rel="icon"]')?.setAttribute('href', storeData.icon);
+  });
 
   createEffect(() => {
     if (!copied()) return;
@@ -33,12 +39,15 @@ export const Info: Component<InfoProps> = (props) => {
 
   createEffect(() => {
     if (!animationEnded()) return;
-    localStorage.setItem('size', JSON.stringify({ width: infoRef.clientWidth, height: infoRef.clientHeight }));
+    setData({ size: { width: infoRef.clientWidth, height: infoRef.clientHeight } });
   });
 
   createEffect(() => {
     if (!data()) return;
-    const timeoutId = setTimeout(() => setAnimationEnded(true), 2100);
+    const timeoutId = setTimeout(() => {
+      setAnimationEnded(true);
+      setData({ icon: data().icon ?? 'server.svg' });
+    }, 2100);
     onCleanup(() => clearTimeout(timeoutId));
   });
 

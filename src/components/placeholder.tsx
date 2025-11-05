@@ -1,22 +1,21 @@
+import { infoStore } from '@/stores/info';
 import { cn } from '@/utils/cn';
-import { parseJson } from '@/utils/parseJson';
 import { type Component } from 'solid-js';
 import { Motion } from 'solid-motionone';
 
 type PlaceholderProps = {
-  size: string | null;
   error?: boolean;
 };
 
 export const Placeholder: Component<PlaceholderProps> = (props) => {
-  const size = () => parseJson<{ width: number; height: number }>(props.size);
   const error = () => props.error;
+  const [data] = infoStore;
 
   return (
     <Motion.div
       style={{
-        width: `${size().width}px`,
-        height: `${size().height}px`,
+        width: `${data.size.width}px`,
+        height: `${data.size.height}px`,
       }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, delay: 1 }}
