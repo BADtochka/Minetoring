@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createEffect, createSignal } from 'solid-js';
+import { Presence } from 'solid-motionone';
 import { Background } from './components/background';
 import { Info } from './components/info';
 import { Placeholder } from './components/placeholder';
@@ -9,8 +10,8 @@ import { type OfflineServer, type OnlineServer } from './types/MCSRVStat';
 import { tryCatch } from './utils/tryCatch';
 
 function App() {
-  let infoRef!: HTMLDivElement;
   const [data, setData] = createSignal<OnlineServer | OfflineServer | null>(null);
+  const [loaded, setLoaded] = createSignal(false);
   const [error, setError] = createSignal(false);
 
   const fetchInfo = async () => {
@@ -18,6 +19,7 @@ function App() {
 
     if (data) {
       setData(data.data);
+      setLoaded(true);
       return;
     }
 
@@ -26,19 +28,12 @@ function App() {
 
   createEffect(() => fetchInfo());
 
-  createEffect(() => {
-    if (!data()) return;
-    localStorage.setItem('size', JSON.stringify({ width: infoRef.clientWidth, height: infoRef.clientHeight }));
-  });
-
   return (
     <div class='flex h-screen items-center justify-center'>
-      {data() ? (
-        <Info ref={infoRef} data={data()!} />
-      ) : (
-        <Placeholder error={error()} size={localStorage.getItem('size')} />
-      )}
-      <Background />
+      <Presence exitBeforeEnter>
+        {data() ? <Info data={data()!} /> : <Placeholder error={error()} size={localStorage.getItem('size')} />}
+      </Presence>
+      <Background loaded={loaded()} />
     </div>
   );
 }

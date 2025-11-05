@@ -9,11 +9,12 @@ import { Tooltip } from './tooltip';
 
 type InfoProps = {
   data: OnlineServer | OfflineServer;
-  ref: HTMLDivElement;
 };
 
 export const Info: Component<InfoProps> = (props) => {
+  let infoRef!: HTMLDivElement;
   const [copied, setCopied] = createSignal(false);
+  const [animationEnded, setAnimationEnded] = createSignal(false);
   const data = () => props.data as OnlineServer;
 
   const copyToClipboard = () => {
@@ -30,11 +31,22 @@ export const Info: Component<InfoProps> = (props) => {
     onCleanup(() => clearTimeout(timeoutId));
   });
 
+  createEffect(() => {
+    if (!animationEnded()) return;
+    localStorage.setItem('size', JSON.stringify({ width: infoRef.clientWidth, height: infoRef.clientHeight }));
+  });
+
+  createEffect(() => {
+    if (!data()) return;
+    const timeoutId = setTimeout(() => setAnimationEnded(true), 2100);
+    onCleanup(() => clearTimeout(timeoutId));
+  });
+
   if (!data()) return null;
 
   return (
     <Motion.div
-      ref={props.ref}
+      ref={infoRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       class='mx-10 flex w-[70%] max-w-[800px] flex-col gap-12 rounded-2xl bg-[#191A18]/80 p-6'
