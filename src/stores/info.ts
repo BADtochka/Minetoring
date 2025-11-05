@@ -4,8 +4,8 @@ import { createStore } from 'solid-js/store';
 export const infoStore = makePersisted(
   createStore({
     size: {
-      width: 0,
-      height: 0,
+      width: 800,
+      height: 200,
     },
     icon: '',
   }),
