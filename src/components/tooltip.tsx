@@ -26,7 +26,8 @@ export const Tooltip: ParentComponent<TooltipProps> = (props) => {
           animate={{
             opacity: active() ? 1 : 0,
           }}
-          class='absolute -top-[calc(100%+8px)] left-1/2 -translate-x-1/2 rounded-lg bg-[#363935] px-3.5 py-2 whitespace-nowrap'
+          class='absolute -top-[calc(100%+8px)] left-1/2 -translate-x-1/2 cursor-pointer rounded-lg bg-[#363935] px-3.5 py-2
+            whitespace-nowrap'
         >
           {text()}
         </Motion.div>

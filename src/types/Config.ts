@@ -1,3 +1,5 @@
+import type { IconName } from '@/components/icon';
+
 type ApiOverrides = {
   ip?: string;
   version?: string;
@@ -8,6 +10,7 @@ type ApiOverrides = {
 type Link = {
   name: string;
   url: string;
+  icon: IconName;
 };
 
 export type Config = {

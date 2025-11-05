@@ -73,6 +73,24 @@ export const icons = {
       <path d='M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z' />
     </svg>
   ),
+  Web: (props: JSX.SvgSVGAttributes<SVGSVGElement>) => (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-width='2'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      {...props}
+    >
+      <circle cx='12' cy='12' r='10' />
+      <path d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20' />
+      <path d='M2 12h20' />
+    </svg>
+  ),
 };
 
 export const Icon: Component<IconProps> = ({ name, ...props }) => {

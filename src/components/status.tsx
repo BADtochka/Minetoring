@@ -1,4 +1,4 @@
-import { CONFIG } from '@/config';
+import { CONFIG } from '@/config/config';
 import { cn } from '@/utils/cn';
 import type { Component } from 'solid-js';
 import type { JSX } from 'solid-js/h/jsx-runtime';

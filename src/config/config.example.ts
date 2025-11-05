@@ -1,4 +1,4 @@
-import type { Config } from './types/Config';
+import type { Config } from '@/types/Config';
 
 export const CONFIG: Config = {
   ip: 'mine.server.com',
@@ -15,6 +15,7 @@ export const CONFIG: Config = {
     {
       name: 'Github',
       url: 'https://github.com/BADtochka/minetoring',
+      icon: 'Web',
     },
   ],
 };

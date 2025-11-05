@@ -1,6 +1,7 @@
-import { CONFIG } from '@/config';
+import { CONFIG } from '@/config/config';
 import type { OfflineServer, OnlineServer } from '@/types/MCSRVStat';
 import { createEffect, createSignal, onCleanup, Show, type Component } from 'solid-js';
+import { Motion } from 'solid-motionone';
 import { Chip } from './chip';
 import { Image } from './image';
 import { Status } from './status';
@@ -8,6 +9,7 @@ import { Tooltip } from './tooltip';
 
 type InfoProps = {
   data: OnlineServer | OfflineServer;
+  ref: HTMLDivElement;
 };
 
 export const Info: Component<InfoProps> = (props) => {
@@ -28,10 +30,17 @@ export const Info: Component<InfoProps> = (props) => {
     onCleanup(() => clearTimeout(timeoutId));
   });
 
+  if (!data()) return null;
+
   return (
-    <div class='mx-10 flex w-[70%] max-w-[1200px] flex-col gap-12 rounded-2xl bg-[#191A18]/80 p-6'>
+    <Motion.div
+      ref={props.ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      class='mx-10 flex w-[70%] max-w-[800px] flex-col gap-12 rounded-2xl bg-[#191A18]/80 p-6'
+    >
       <div class='flex gap-4'>
-        <Image src='server.svg' class='size-16 rounded-lg' />
+        <Image src={data().icon ?? 'server.svg'} class='size-16 rounded-lg' />
         <div class='flex flex-col gap-2'>
           <div class='flex items-center gap-4'>
             <h1 class='text-2xl font-bold'>{CONFIG.overrides?.name ?? data().motd.clean}</h1>
@@ -51,20 +60,21 @@ export const Info: Component<InfoProps> = (props) => {
           </Show>
           <Chip icon='Version'>{CONFIG.overrides?.version ?? data().protocol.name}</Chip>
           <Tooltip text='Скопировано' show={copied()}>
-            <Chip icon='Plug' onClick={copyToClipboard}>
+            <Chip icon='Plug' class='cursor-copy' onClick={copyToClipboard}>
               {CONFIG.overrides?.ip ?? data().hostname}
             </Chip>
           </Tooltip>
         </div>
-        <Tooltip text='Ссылки появятся на следующем обновлении'>
-          <div class='flex gap-2 opacity-35'>
-            <Chip icon='Users' />
-            <Chip icon='Users' />
-            <Chip icon='Users' />
-            <Chip icon='Users' />
-          </div>
-        </Tooltip>
+        <div class='flex gap-2'>
+          {CONFIG.links?.map((link) => (
+            <a href={link.url} target='_blank'>
+              <Chip icon={link.icon} class='cursor-pointer'>
+                {link.name}
+              </Chip>
+            </a>
+          ))}
+        </div>
       </div>
-    </div>
+    </Motion.div>
   );
 };
